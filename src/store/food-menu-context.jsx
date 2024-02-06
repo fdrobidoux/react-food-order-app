@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { fetchMeals } from "../utils/backendFetch";
+import { getMeals } from "../utils/backendFetch";
 import { useFetch } from "../hooks/useFetch";
 
 
@@ -14,7 +14,7 @@ export default function FoodMenuContextProvider({ children }) {
     fetchedData: foodMenu,
     error: foodMenuFetchingError,
     isFetching: isFetchingFoodMenu
-  } = useFetch(fetchMeals, []);
+  } = useFetch(getMeals, []);
 
   var ctxValue = {
     foodMenu,

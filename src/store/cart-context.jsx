@@ -2,6 +2,8 @@ import { createContext, useState, useReducer } from "react";
 
 export const CartContext = createContext({
   meals: [],
+  totalPrice: 0,
+  setTotalPrice: (price) => {},
   addMealToCart: (id) => {},
   updateMealQuantity: (id, amount) => {}
 });
@@ -56,6 +58,12 @@ function cartReducer(state, action) {
       throw new Error("Item didn't exist in cart.");
     }
   }
+  else if (action.type === "CLEAR_CART") {
+    return {
+      ...state,
+      meals: []
+    };
+  }
 
   return state;
 }
@@ -65,6 +73,7 @@ export default function CartContextProvider({ children }) {
     cartReducer,
     { meals: [] }
   );
+  const [totalPrice, setTotalPrice] = useState(0);
 
   function addToCart(id) {
     cartDispatch({ 
@@ -80,10 +89,18 @@ export default function CartContextProvider({ children }) {
     });
   }
 
+  function clearCart() {
+    cartDispatch({ type: "CLEAR_CART" });
+    setTotalPrice(0);
+  }
+
   const ctxValue = {
     meals: cartState.meals,
+    totalPrice,
+    setTotalPrice,
     addMealToCart: addToCart,
-    updateMealQuantity: updateCartQuantity
+    updateMealQuantity: updateCartQuantity,
+    clearCart
   };
 
   return <CartContext.Provider value={ctxValue}>{children}</CartContext.Provider>

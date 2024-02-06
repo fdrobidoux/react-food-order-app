@@ -25,3 +25,30 @@ export function useFetch(fetchFn, initialValue) {
 
   return {isFetching, error, fetchedData, setFetchedData};
 }
+
+export function usePostFetch(fetchFn, jsonObject) {
+  const [isPosting, setIsPosting] = useState(false);
+  const [error, setError] = useState(null);
+  const [statusCode, setStatusCode] = useState(-1);
+  const [trigger, setTrigger] = useState(false);
+
+  useEffect(() => {
+    async function postData() {
+      setIsPosting(true);
+      
+      try {
+        const _statusCode = await fetchFn();
+        setStatusCode(_statusCode);
+      } catch (e) {
+        setIsPosting(false);
+        setError({ message: e.message || "Failed to fetch data." });
+      }
+      
+      setIsPosting(false);
+    }
+
+    postData();
+  }, [fetchFn]);
+
+  return { isPosting, error, statusCode };
+}

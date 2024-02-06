@@ -6,15 +6,15 @@ import { FoodMenuContext } from "../store/food-menu-context";
 
 const CartModal = forwardRef(function Modal({ title, nextModal }, ref) {
   const { foodMenu } = useContext(FoodMenuContext);
-  const { meals, updateMealQuantity } = useContext(CartContext);
+  const { meals, totalPrice, setTotalPrice, updateMealQuantity } = useContext(CartContext);
 
   const [mappedFood, setMappedFood] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
 
   const dialog = useRef();
   
   useImperativeHandle(ref, () => {
     return {
+      ...ref.current,
       open: () => {
         dialog.current.showModal();
       },
@@ -67,7 +67,6 @@ const CartModal = forwardRef(function Modal({ title, nextModal }, ref) {
   return createPortal(
     <dialog className="modal" id="cart-modal" ref={dialog}>
       <h2>{title}</h2>
-      <p>HELLO THERE</p>
       <ul>
         {mappedFood.map((food, i) => {
           return (
